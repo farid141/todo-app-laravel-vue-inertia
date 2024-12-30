@@ -45,4 +45,12 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    public function tasks() {
+        return $this->belongsToMany(Task::class, 'task_user')->withPivot('role');
+    }
+
+    public function subtasks() {
+        return $this->hasManyThrough(Subtask::class, Task::class, 'created_by', 'task_id');
+    }
 }
