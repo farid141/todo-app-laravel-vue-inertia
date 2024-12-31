@@ -12,7 +12,7 @@ class Task extends Model
         return $this->morphToMany(Tag::class, 'taggable');
     }
 
-    public function user() {
+    public function users() {
         return $this->belongsToMany(User::class, 'task_user');
     }
 }
