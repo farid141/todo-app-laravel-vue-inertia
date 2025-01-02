@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Tag;
+use App\Models\Task;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Illuminate\Support\Facades\DB;
 
 class TaskController extends Controller
 {
@@ -24,18 +26,51 @@ class TaskController extends Controller
      */
     public function store(Request $request)
     {
-        dd($request->all());
+        $validated = $request->validate([
+            'title' => ['required'],
+            'description' => ['nullable'],
+            'tags' => ['nullable', 'exists:tags,id', 'array'],
+
+            'users' => ['nullable', 'array'],
+            'users.*.user' => ['required', 'exists:users,id'],
+            'users.*.role' => ['required'],
+
+            'subtasks' => ['nullable', 'array'],
+            'subtasks.*.title' => ['required'],
+            'subtasks.*.tags' => ['nullable', 'exists:tags,id', 'array'],
+        ]);
+
         DB::beginTransaction();
-        try {
-            $data['message'] = 'OK';
-            $status_code = 200;
-            DB::commit();
-        } catch (Exception $e) {
-            $data['message'] = $e->getMessage();
-            $status_code = 421;
+        $task = Task::create([
+            'title' => $validated['title'],
+            'description' => $validated['description'],
+            'is_complete' => false,
+        ]);
+
+        $task->tags()->sync($validated['tags']);
+
+        // Prepare user-role data for syncing
+        $syncData = [];
+        foreach ($validated['users'] as $userRole) {
+            $syncData[$userRole['user']] = ['role' => $userRole['role']];
+        }
+        $task->users()->sync($syncData);
+
+        // Process subtasks
+        foreach ($validated['subtasks'] as $subtaskData) {
+            $subtask = $task->subtasks()->create([
+                'title' => $subtaskData['title'],
+            ]);
+
+            // Attach tags to the subtask
+            if (!empty($subtaskData['tags'])) {
+                $subtask->tags()->sync($subtaskData['tags']);
+            }
         }
 
-        return response()->json($data, $status_code);
+        DB::commit();
+
+        return redirect(to: route('dashboard'))->with('success', 'Task created successfully.');
     }
 
     /**

@@ -6,9 +6,15 @@ use Illuminate\Database\Eloquent\Model;
 
 class Subtask extends Model
 {
-    protected $guarded=['id'];
+    protected $guarded = ['id'];
 
-    public function tags() {
+    public function tags()
+    {
         return $this->morphToMany(Tag::class, 'taggable');
+    }
+
+    public function task()
+    {
+        return $this->belongsTo(Task::class);
     }
 }

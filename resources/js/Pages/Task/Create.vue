@@ -13,8 +13,12 @@ import Subtask from '@/Pages/Task/Partials/Subtask.vue';
 
 import vSelect from 'vue-select'
 import 'vue-select/dist/vue-select.css';
+import { useToast } from "vue-toastification";
 
 const props = defineProps({
+    errors: {
+        type: Object,
+    },
     users: {
         type: Object,
     },
@@ -23,6 +27,7 @@ const props = defineProps({
     },
 })
 
+const toast = useToast();
 const form = useForm({
     title: null,
     description: null,
@@ -32,10 +37,24 @@ const form = useForm({
 });
 
 function handleSubmit() {
-    form.transform((data) => ({
-        ...data,
-        tags: data.tags.map(tag => tag.id)
-    })).post(route('tasks.store'))
+    form.transform((data) => {
+        const newData = {
+            ...data,
+            users: data.taskUsers,
+        }
+        delete newData.taskUsers
+        return newData
+    }).post(route('tasks.store'), {
+        onError: (errors) => {
+            const errorMessages = Object.values(errors).flat().join("\n");
+            toast.error(errorMessages, {
+                timeout: 8000, // Allow time to read
+            });
+        },
+        onSuccess: () => {
+            toast.success("Task created successfully!");
+        },
+    })
 }
 
 function updateTaskUsers(value) {

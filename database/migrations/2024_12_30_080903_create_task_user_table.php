@@ -12,6 +12,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('task_id')->constrained()->onDelete('cascade'); // Relasi ke tasks
             $table->foreignId('user_id')->constrained()->onDelete('cascade'); // Relasi ke users
+            $table->text('role');
             $table->timestamps();
         });
     }
