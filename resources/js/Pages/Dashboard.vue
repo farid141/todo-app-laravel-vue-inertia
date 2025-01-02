@@ -12,7 +12,7 @@ onMounted(() => {
     let table = new DataTable('#myTable');
 });
 
-defineProps({
+const props = defineProps({
     tasks: {
         type: Object,
     },
@@ -37,17 +37,18 @@ defineProps({
         </template>
 
         <div class="py-12">
-            <div class="mx-auto max-w-7xl sm:px-6 lg:px-8 flex gap-4">
-                <div class="overflow-hidden bg-white shadow-sm sm:rounded-lg">
+            <div class="mx-auto max-w-full sm:px-6 lg:px-8 grid grid-cols-7 gap-4">
+                <div class="col-span-5 overflow-hidden bg-white shadow-sm sm:rounded-lg">
                     <div class="p-6 text-gray-900">
-                        <Link :href="route('tasks.create')">
                         <PrimaryButton class="ms-4">
+                            <Link :href="route('tasks.create')" class="text-left">
                             Add Task
+                            </Link>
                         </PrimaryButton>
-                        </Link>
                         <table id="myTable" class="">
                             <thead>
                                 <tr>
+                                    <th>#</th>
                                     <th>Title</th>
                                     <th>Tags</th>
                                     <th>Users</th>
@@ -55,10 +56,15 @@ defineProps({
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr v-for="task in tasks" :key="task.id">
+                                <tr v-for="(task, index) in tasks" :key="task.id">
+                                    <td>{{ index + 1 }}</td>
                                     <td>{{ task.title }}</td>
-                                    <td>{{ task.tags }}</td>
-                                    <td>{{ task.title }}</td>
+                                    <td>
+                                        <span v-for="(tag, tagIdx) in task.tagList" :key="tagIdx"
+                                            class="rounded bg-green-400 text-white mx-0.5 px-0.5">
+                                            {{ tag }} </span>
+                                    </td>
+                                    <td>{{ task.usersString }}</td>
                                     <td>{{ task.id }}</td>
                                 </tr>
                             </tbody>
@@ -66,12 +72,33 @@ defineProps({
                     </div>
                 </div>
 
-                <div class="overflow-hidden bg-white shadow-sm sm:rounded-lg w-max flex flex-col">
+                <!-- Tag Counts by Tasks (1 column) -->
+                <div class="overflow-hidden bg-white shadow-sm sm:rounded-lg">
                     <div class="p-6 text-gray-900">
-                        asd
+                        <h3 class="text-lg font-semibold mb-4">Tags by Tasks</h3>
+                        <ul class="space-y-2">
+                            <li v-for="(count, index) in tag_by_task" :key="tag" class="flex items-center">
+                                <span class="text-gray-700 mr-2">{{ index + 1 }}</span>
+                                <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-sm">
+                                    {{ `${count.name}: ${count.tasks_count}` }}
+                                </span>
+                            </li>
+                        </ul>
                     </div>
+                </div>
+
+                <!-- Tag Counts by Subtasks (1 column) -->
+                <div class="overflow-hidden bg-white shadow-sm sm:rounded-lg">
                     <div class="p-6 text-gray-900">
-                        asd
+                        <h3 class="text-lg font-semibold mb-4">Tags by Subtasks</h3>
+                        <ul class="space-y-2">
+                            <li v-for="(count, index) in tag_by_subtask" :key="tag" class="flex items-center">
+                                <span class="text-gray-700 mr-2">{{ index + 1 }}</span>
+                                <span class="bg-purple-100 text-purple-800 px-2 py-1 rounded-full text-sm">
+                                    {{ `${count.name}: ${count.subtasks_count}` }}
+                                </span>
+                            </li>
+                        </ul>
                     </div>
                 </div>
 
