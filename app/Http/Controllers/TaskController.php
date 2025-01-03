@@ -94,6 +94,7 @@ class TaskController extends Controller
         // ambil subtask dan id tag dari subtask
         $task->taskSubtasks = $task->subtasks->transform(function ($subtask) {
             $subtask->subtaskTags = $subtask->tags->transform(fn($tag) => $tag->id);
+            $subtask->is_completed = $subtask->is_completed ? true : false;
             return $subtask->toArray();
         });
         $task->makeHidden(['users', 'tags', 'subtasks']);
@@ -120,10 +121,12 @@ class TaskController extends Controller
             'subtasks' => ['nullable', 'array'],
             'subtasks.*.title' => ['required'],
             'subtasks.*.tags' => ['nullable', 'exists:tags,id', 'array'],
+            'subtasks.*.is_completed' => ['required', 'boolean'],
         ]);
         $task = Task::with('subtasks')->findOrFail($id);
 
         DB::beginTransaction();
+        $task->update($validated);
         foreach ($task->subtasks as $subtask) {
             $subtask->tags()->detach();
         }
@@ -143,6 +146,7 @@ class TaskController extends Controller
         foreach ($validated['subtasks'] as $subtaskData) {
             $subtask = $task->subtasks()->create([
                 'title' => $subtaskData['title'],
+                'is_completed' => $subtaskData['is_completed'],
             ]);
 
             // Attach tags to the subtask

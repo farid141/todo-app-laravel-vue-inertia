@@ -3,6 +3,7 @@ import TextInput from '@/Components/TextInput.vue';
 import Checkbox from '@/Components/Checkbox.vue';
 
 import vSelect from 'vue-select'
+import { BIconTrash } from 'bootstrap-icons-vue'
 import 'vue-select/dist/vue-select.css';
 
 const props = defineProps({
@@ -21,7 +22,8 @@ const emit = defineEmits(['update:subtasks'])
 const addSubtask = () => {
     const updatedSubtasks = [...props.subtasks, {
         title: '',
-        tags: []
+        tags: [],
+        is_completed: false
     }]
     emit('update:subtasks', updatedSubtasks)
 }
@@ -53,7 +55,7 @@ const updateSubtask = (index, field, value) => {
             </button>
         </div>
         <!-- Subtask Table -->
-        <div class="border rounded-lg">
+        <div class="border rounded-lg mt-3">
             <!-- Table Header -->
             <div class="bg-gray-50 px-4 py-3 grid grid-cols-12 gap-4 border-b">
                 <div class="col-span-5 font-medium text-gray-700">Title</div>
@@ -62,7 +64,8 @@ const updateSubtask = (index, field, value) => {
             </div>
 
             <!-- Subtask List -->
-            <div v-for="(subtask, index) in subtasks" :key="index" class="px-4 py-3 grid grid-cols-12 gap-4 border-b">
+            <div v-for="(subtask, index) in subtasks" :key="index"
+                class="px-4 py-3 grid grid-cols-12 gap-4 border-b items-center">
                 <div class="col-span-5">
                     <TextInput type="text" class="block w-full" v-model="subtask.title"
                         :placeholder="'Subtask ' + (index + 1) + ' title'" />
@@ -71,11 +74,11 @@ const updateSubtask = (index, field, value) => {
                     <vSelect :options="tags" label="name" v-model="subtask.tags" multiple="true"
                         :reduce="option => option.id" />
                 </div>
-                <div class="col-span-2">
-                    <button @click="removeSubtask(index)" type="button"
-                        class="inline-flex items-center px-3 py-2 border border-red-300 rounded-md font-semibold text-xs text-red-700 uppercase tracking-widest shadow-sm hover:bg-red-50 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 disabled:opacity-25 transition ease-in-out duration-150">
-                        Remove
+                <div class="col-span-2 flex gap-2 items-center justify-center">
+                    <button>
+                        <BIconTrash @click="removeSubtask(index)" />
                     </button>
+                    <Checkbox v-model:checked="subtask.is_completed" />
                 </div>
             </div>
         </div>

@@ -88,7 +88,8 @@ function updateSubtasks(value) {
 
                                 <div>
                                     <InputLabel for="description" value="Description" />
-                                    <TextInput id="description" type="text" class="mt-1 block w-full"
+                                    <textarea id="description" type="text"
+                                        class="rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 mt-1 block w-full"
                                         v-model="form.description" required autofocus autocomplete="description" />
                                 </div>
 

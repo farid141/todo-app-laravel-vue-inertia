@@ -84,7 +84,7 @@ const destroy = (id) => {
                                             {{ tag }} </span>
                                     </td>
                                     <td>{{ task.usersString }}</td>
-                                    <td style="display: flex; gap: 8px; align-items: center;">
+                                    <td class="flex items-start gap-2">
                                         <span>
                                             <Link :href="route('tasks.edit', task.id)">
                                             <BIconPencilSquare />
