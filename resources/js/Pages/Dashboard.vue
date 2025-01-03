@@ -1,12 +1,14 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import { Head, Link } from '@inertiajs/vue3';
+import { Head, Link, usePage, router } from '@inertiajs/vue3';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 
 import { onMounted } from 'vue';
 import DataTable from 'datatables.net-dt';
 import 'datatables.net-dt/css/dataTables.dataTables.css';
 import $ from 'jquery';
+import { BIconPencilSquare, BIconTrash } from 'bootstrap-icons-vue'
+import { useToast } from "vue-toastification";
 
 onMounted(() => {
     let table = new DataTable('#myTable');
@@ -23,6 +25,23 @@ const props = defineProps({
         type: Object,
     },
 })
+
+const toast = useToast();
+const { flash } = usePage().props;
+
+if (flash.success)
+    toast.success(flash.success);
+
+const destroy = (id) => {
+    if (confirm('Are you sure you want to delete this task?')) {
+        router.delete(route('tasks.destroy', id), {
+            onSuccess: () => {
+                toast.success('Task deleted successfully')
+            }
+        })
+    }
+}
+
 </script>
 
 <template>
@@ -65,7 +84,20 @@ const props = defineProps({
                                             {{ tag }} </span>
                                     </td>
                                     <td>{{ task.usersString }}</td>
-                                    <td>{{ task.id }}</td>
+                                    <td style="display: flex; gap: 8px; align-items: center;">
+                                        <span>
+                                            <Link :href="route('tasks.edit', task.id)">
+                                            <BIconPencilSquare />
+                                            </Link>
+                                        </span>
+                                        <span>
+                                            <form @submit.prevent="destroy">
+                                                <button type="button" @click="destroy(task.id)">
+                                                    <BIconTrash />
+                                                </button>
+                                            </form>
+                                        </span>
+                                    </td>
                                 </tr>
                             </tbody>
                         </table>

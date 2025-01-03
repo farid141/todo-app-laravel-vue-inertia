@@ -19,6 +19,7 @@
         "vue": "^3.4.0"
     },
     "dependencies": {
+        "bootstrap-icons-vue": "^1.11.3",
         "datatables.net-dt": "^2.1.8",
         "jquery": "^3.7.1",
         "vue-select": "^4.0.0-beta.6",
