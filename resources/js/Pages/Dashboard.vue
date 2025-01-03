@@ -24,6 +24,9 @@ const props = defineProps({
     tag_by_subtask: {
         type: Object,
     },
+    subtask_by_user: {
+        type: Object,
+    },
 })
 
 const toast = useToast();
@@ -84,7 +87,7 @@ const destroy = (id) => {
                                             {{ tag }} </span>
                                     </td>
                                     <td>{{ task.usersString }}</td>
-                                    <td class="flex items-start gap-2">
+                                    <td class="flex items-start gap-2 justify-center">
                                         <span>
                                             <Link :href="route('tasks.edit', task.id)">
                                             <BIconPencilSquare />
@@ -134,6 +137,31 @@ const destroy = (id) => {
                     </div>
                 </div>
 
+                <div class="overflow-hidden bg-white shadow-sm sm:rounded-lg col-span-6">
+                    <div class="border rounded-lg mt-3">
+                        <!-- Table Header -->
+                        <div class="bg-gray-50 px-4 py-3 grid grid-cols-12 gap-4 border-b">
+                            <div class="col-span-1 font-medium text-gray-700">#</div>
+                            <div class="col-span-3 font-medium text-gray-700">Name</div>
+                            <div class="col-span-8 font-medium text-gray-700">Subtasks</div>
+                        </div>
+
+                        <!-- Subtask List -->
+                        <div v-for="(user, index) in subtask_by_user" :key="index"
+                            class="px-4 py-3 grid grid-cols-12 gap-4 border-b items-center">
+                            <div class="col-span-1">{{ index + 1 }}</div>
+                            <div class="col-span-3">
+                                {{ user.name }}
+                            </div>
+                            <div class="col-span-8">
+                                <pre>{{ user.subtasks }}</pre>
+                                <p v-for="(subtask, subtaskId) in user.subtasks" :key="subtaskId">
+                                    {{ subtask.title }}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </AuthenticatedLayout>

@@ -46,11 +46,21 @@ class User extends Authenticatable
         ];
     }
 
-    public function tasks() {
+    public function tasks()
+    {
         return $this->belongsToMany(Task::class, 'task_user')->withPivot('role');
     }
 
-    public function subtasks() {
-        return $this->hasManyThrough(Subtask::class, Task::class, 'created_by', 'task_id');
+    public function subtasks()
+    {
+        return $this->hasManyThrough(
+            Subtask::class,
+            Task::class,
+            'id',           // Foreign key on 'task_user' table (tasks.id)
+            'task_id',      // Foreign key on 'subtasks' table (subtasks.task_id)
+            'id',           // Local key on 'users' table (users.id)
+            'id'            // Local key on 'tasks' table
+        )->join('task_user', 'tasks.id', '=', 'task_user.task_id')
+            ->where('task_user.user_id', $this->id);
     }
 }
