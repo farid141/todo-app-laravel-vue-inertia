@@ -2,9 +2,7 @@
 import TextInput from '@/Components/TextInput.vue';
 import Checkbox from '@/Components/Checkbox.vue';
 
-import vSelect from 'vue-select'
 import { BIconTrash } from 'bootstrap-icons-vue'
-import 'vue-select/dist/vue-select.css';
 
 const props = defineProps({
     subtasks: {

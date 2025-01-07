@@ -10,8 +10,6 @@ import PrimaryButton from '@/Components/PrimaryButton.vue';
 import TaskUser from '@/Pages/Task/Partials/TaskUser.vue';
 import Subtask from '@/Pages/Task/Partials/Subtask.vue';
 
-import vSelect from 'vue-select'
-import 'vue-select/dist/vue-select.css';
 import { useToast } from "vue-toastification";
 
 const props = defineProps({
@@ -50,14 +48,6 @@ function handleSubmit() {
             });
         },
     })
-}
-
-function updateFormUsers(value) {
-    form.users = value
-}
-
-function updateSubtasks(value) {
-    form.subtasks = value
 }
 
 </script>
@@ -100,13 +90,14 @@ function updateSubtasks(value) {
                                 </div>
 
                                 <div>
-                                    <TaskUser :formUsers="form.users" @update:formUsers="updateFormUsers" :users="users"
-                                        :errors="form.errors" />
+                                    <TaskUser :formUsers="form.users" @update:formUsers="(value) => form.users = value"
+                                        :users="users" :errors="form.errors" />
                                 </div>
                             </div>
 
                             <div class="subtask-data">
-                                <Subtask :subtasks="form.subtasks" @update:subtasks="updateSubtasks" :tags="tags" />
+                                <Subtask :subtasks="form.subtasks" @update:subtasks="(value) => form.subtasks = value"
+                                    :tags="tags" />
                             </div>
                         </div>
 

@@ -7,6 +7,7 @@ import { createApp, h } from 'vue';
 import { ZiggyVue } from '../../vendor/tightenco/ziggy';
 
 import Toast from "vue-toastification";
+import vSelect from 'vue-select';
 import "vue-toastification/dist/index.css";
 
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
@@ -37,6 +38,7 @@ createInertiaApp({
                 icon: true,
                 rtl: false,
             })
+            .component('vSelect', vSelect)
             .mount(el);
     },
     progress: {
