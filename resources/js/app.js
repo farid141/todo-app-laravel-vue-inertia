@@ -9,6 +9,7 @@ import { ZiggyVue } from '../../vendor/tightenco/ziggy';
 import Toast from "vue-toastification";
 import vSelect from 'vue-select';
 import "vue-toastification/dist/index.css";
+import { BootstrapIconsPlugin } from 'bootstrap-icons-vue'
 
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
 
@@ -23,6 +24,7 @@ createInertiaApp({
         return createApp({ render: () => h(App, props) })
             .use(plugin)
             .use(ZiggyVue)
+            .use(BootstrapIconsPlugin)
             .use(Toast, {
                 // Optional Toast settings
                 position: "top-right",

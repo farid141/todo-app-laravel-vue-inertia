@@ -21,6 +21,7 @@
     "dependencies": {
         "bootstrap-icons-vue": "^1.11.3",
         "datatables.net-dt": "^2.1.8",
+        "eslint-plugin-prettier": "^5.2.1",
         "jquery": "^3.7.1",
         "vue-select": "^4.0.0-beta.6",
         "vue-toastification": "^2.0.0-rc.5"
