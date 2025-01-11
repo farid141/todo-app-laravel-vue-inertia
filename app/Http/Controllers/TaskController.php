@@ -167,10 +167,10 @@ class TaskController extends Controller
         DB::beginTransaction();
 
         $task = Task::with('subtasks')->findOrFail($id);
-        $task->users()->delete();
-        $task->tags()->delete();
+        $task->users()->detach();
+        $task->tags()->detach();
         foreach ($task->subtasks as $subtask) {
-            $subtask->tags()->delete();
+            $subtask->tags()->detach();
         }
         $task->subtasks()->delete();
         $task->delete();
